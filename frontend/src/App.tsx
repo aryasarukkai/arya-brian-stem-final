@@ -11,6 +11,7 @@ const App: React.FC = () => {
   const [showResult, setShowResult] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    alert("Please wait for the question to load. This may take a few seconds.  Do not press the button multiple times.");
     e.preventDefault();
     const data = await fetchTriviaQuestion(teamName, difficulty);
     console.log(data);
@@ -41,6 +42,10 @@ const App: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <h1 className="text-3xl font-semibold mb-8">NBA Trivia</h1>
+          
+          <h2 className="text-xl font-semibold mb-4">Arya Sarukkai, Brian Le</h2>
+          
+          <h2 className="text-xl font-semibold mb-4">STEM Lab [CS] FINAL PROJECT</h2>
           {!triviaQuestion ? (
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
