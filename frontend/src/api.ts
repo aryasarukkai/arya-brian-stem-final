@@ -2,7 +2,7 @@ import { TriviaQuestion } from './types';
 
 export const fetchTriviaQuestion = async (teamName: string, difficulty: number): Promise<TriviaQuestion> => {
   try {
-    const response = await fetch(`http://aryasarukkai.pythonanywhere.com/api/trivia?teamName=${teamName}&difficulty=${difficulty}`);
+    const response = await fetch(`https://stemicifinalapi.onrender.com/api/trivia?teamName=${teamName}&difficulty=${difficulty}`);
     if (!response.ok) {
       throw new Error('Failed to fetch trivia question');
     }
