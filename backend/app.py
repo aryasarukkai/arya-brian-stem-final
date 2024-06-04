@@ -13,24 +13,20 @@ client = anthropic.Anthropic(
     api_key="CLAUDE_API_KEY"
 )
 
-def extract_json(text):
-    # Assuming the text is always in the format you've shown, we can directly extract the JSON string
-    # Look for the opening '{' character and everything until the closing '}' character
-    start_index = text.find('{')
-    end_index = text.rfind('}')
-    if start_index!= -1 and end_index!= -1:
-        json_string = text[start_index:end_index+1]
-        # Unescape the newline characters and double quotes
-        json_string = json_string.replace('\\n', '\n').replace('\\"', '"')
-        try:
-            # Parse the JSON string
-            json_data = json.loads(json_string)
-            return json_data
-        except json.JSONDecodeError as e:
-            print(f"Failed to parse JSON: {e}")
-            return None
-    else:
-        print("No JSON found in the text.")
+    def extract_json(text):
+        start_index = text.find('{')
+        end_index = text.rfind('}')
+        if start_index!= -1 and end_index!= -1:
+            json_string = text[start_index:end_index+1]
+            json_string = json_string.replace('\\n', '\n').replace('\\"', '"')
+            try:
+                json_data = json.loads(json_string)
+                return json_data
+            except json.JSONDecodeError as e:
+                print(f"Failed to parse JSON: {e}")
+                return None
+        else:
+            print("No JSON found in the text.")
         return None
 
 def get_difficulty(difficulty):
@@ -42,46 +38,6 @@ def get_difficulty(difficulty):
         return "hard"
     else:
         return "medium"
-
-@app.route('/api/summary', methods=['GET'])
-def get_summary():
-    team_name = request.args.get('teamName')
-    if not team_name:
-        return make_response(jsonify({"error": "Missing teamName parameter"}), 400)
-
-    message = client.messages.create(
-        model="claude-3-sonnet-20240229",
-        max_tokens=1000,
-        temperature=0.8,
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": f"Generate a summary of the NBA team {team_name}."
-                    }
-                ]
-            }
-        ]
-    )
-
-    # Extract the text content from the message.content
-    response_text = str(message.content)
-    print("log: ")
-    print(response_text)
-
-    # Parse the JSON data from the response text
-    response_json = extract_json(response_text)
-    return jsonify(response_json)
-
-@app.route('/api/help', methods=['GET'])
-def get_help():
-    message = "Welcome to the NBA Trivia Chatbot! You can use the following requests:\n\n"
-    message += "1. /api/summary?teamName=TEAM_NAME\n" 
-    message += "2. /api/trivia?teamName=TEAM_NAME\n"
-    return message
-
 
 @app.route('/api/trivia', methods=['GET'])
 def get_trivia():
